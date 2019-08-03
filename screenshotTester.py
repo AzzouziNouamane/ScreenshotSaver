@@ -10,11 +10,8 @@ import pyautogui
 def take_screenshot():
     print('Executing...')
     #if __name__ == '__main__':
-    x = 1
-    while x < 4 :
-        pyautogui.screenshot('image'+str(x)+'.png')
-        x += 1
-        time.sleep(2)
+    pyautogui.screenshot('image.png')
+    time.sleep(2)
 #-#
 
 def test_hotkey():
