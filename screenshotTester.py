@@ -4,23 +4,26 @@ import datetime
 import speechRecognitionTester as speechRecognitionTester
 import time
 import pyautogui
-
+import pytesseract
 from pynput import keyboard
+from PIL import Image
 
 x = 0
 
 # Currently pressed keys
 current_keys = set()
+possible_keys = [Key.shift, KeyCode(char='a'), KeyCode(char='A'), KeyCode(char='v'), KeyCode(char='V'), KeyCode(char='b'), KeyCode(char='B')]
 
 def on_press(key):
     print("On Press : ")
     print(key)
     print(current_keys)
+    if (key in possible_keys):
     # When a key is pressed, add it to the set we are keeping track of and check if this set is in the dictionary
-    current_keys.add(key)
-    if frozenset(current_keys) in combination_to_function:
+        current_keys.add(key)
+        if frozenset(current_keys) in combination_to_function:
         # If the current set of keys are in the mapping, execute the function
-        combination_to_function[frozenset(current_keys)]()
+            combination_to_function[frozenset(current_keys)]()
 
 def on_release(key):
     # When a key is released, remove it from the set of keys we are keeping track of
@@ -36,6 +39,10 @@ def take_screenshot():
     print('Executing...')
     #if __name__ == '__main__':
     pyautogui.screenshot('image' + str(x) + '.png')
+    myScreenshot = Image.open('image' + str(x) + '.png')
+    text = pytesseract.image_to_string(myScreenshot, lang='eng')
+    print('My text is : ')
+    print(text)
     x += 1
     print('Done')
     if Key.shift in current_keys:
@@ -83,6 +90,6 @@ combination_to_function = {
     frozenset([Key.shift, KeyCode(char='B')]): exit,
 }
 
-
+pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
 with Listener(on_press=on_press, on_release=None) as listener:
     listener.join()
